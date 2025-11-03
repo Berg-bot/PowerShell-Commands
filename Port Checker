@@ -1,0 +1,11 @@
+$ip = "75.27.165.135"
+$ports = 22, 80, 443, 8080, 8040, 3389, 445, 21, 387, 5900, 9200
+
+foreach ($port in $ports) {
+    $result = Test-NetConnection -ComputerName $ip -Port $port
+    [PSCustomObject]@{
+        IP       = $ip
+        Port     = $port
+        TcpTestSucceeded = $result.TcpTestSucceeded
+    }
+}
