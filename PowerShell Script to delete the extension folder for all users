@@ -1,0 +1,22 @@
+# Close Chrome (prevents file locks)
+Get-Process chrome -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+
+$extensionId = "nmmhkkegccagdldgiimedpiccmgmieda"
+$version     = "1.0.0.6_0"
+
+Get-ChildItem "C:\Users" -Directory -ErrorAction SilentlyContinue | ForEach-Object {
+    $chromePath = Join-Path $_.FullName "AppData\Local\Google\Chrome\User Data"
+
+    if (Test-Path $chromePath) {
+        # Find all matching profile folders (Default, Profile 1, Profile 2, etc.)
+        Get-ChildItem $chromePath -Directory -ErrorAction SilentlyContinue | ForEach-Object {
+            $target = Join-Path $_.FullName "Extensions\$extensionId\$version"
+
+            if (Test-Path $target) {
+                Write-Host "Deleting $target"
+                Remove-Item -LiteralPath $target -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+}
+``
