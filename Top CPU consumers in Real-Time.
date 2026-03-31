@@ -1,0 +1,10 @@
+while ($true) {
+  Clear-Host
+  Get-Process |
+    Sort-Object CPU -Descending |
+    Select-Object -First 15 `
+      Name, Id,
+      @{N="CPU(s)";E={[math]::Round($_.CPU,2)}},
+      @{N="Memory(MB)";E={[math]::Round($_.WorkingSet64/1MB,1)}}
+  Start-Sleep -Seconds 2
+}
